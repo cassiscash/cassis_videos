@@ -1,13 +1,13 @@
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { loadFont as loadGrotesk } from "@remotion/google-fonts/SpaceGrotesk";
-import { loadFont as loadMono } from "@remotion/google-fonts/SpaceMono";
+import { loadFont as loadFira } from "@remotion/google-fonts/FiraCode";
 
 const { fontFamily: FONT } = loadGrotesk("normal", {
   weights: ["400", "600", "700"],
   subsets: ["latin"],
 });
-const { fontFamily: MONO } = loadMono("normal", {
-  weights: ["400", "700"],
+const { fontFamily: MONO } = loadFira("normal", {
+  weights: ["400", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -42,16 +42,23 @@ type BalSpec = { base: number; from: number; to: number; delta: number };
 type BubbleSpec = { id: string; text: string; from: number; to: number };
 
 const C = {
-  bg: "#0b0e14",
-  green: "#22c55e",
-  blue: "#3b82f6",
-  orange: "#f97316",
-  purple: "#a855f7",
-  red: "#ef4444",
-  gray: "#9ca3af",
-  yellow: "#eab308",
-  text: "#e6edf3",
-  muted: "#8b98a9",
+  bg: "#1b1a21",
+  card: "#232230",
+  ink: "#2b2b2b",
+  white: "#f7f7f5",
+  text: "#f7f7f5",
+  muted: "#9aa0ae",
+  cassis: "#7c3aed",
+  amber: "#efcc34",
+  coral: "#e18d72",
+  cyan: "#5ab7ec",
+  lime: "#add46c",
+  arkade: "#a855f7",
+  liquid: "#5ab7ec",
+  rootstock: "#22c55e",
+  fedimint: "#ef4444",
+  cashu: "#1d4ed8",
+  lightning: "#eab308",
 };
 
 const R = 52;
@@ -70,56 +77,56 @@ const INSTANCES: Inst[] = [
   {
     id: "alice",
     person: "Alice",
-    color: C.red,
+    color: C.coral,
     route: { x: 400, y: 560 },
     final: { x: BOX_CENTERS[0], y: TOP_NODE_Y },
   },
   {
     id: "bob1",
     person: "Bob",
-    color: C.gray,
+    color: C.muted,
     route: { x: 620, y: 180 },
     final: { x: BOX_CENTERS[0], y: BOTTOM_NODE_Y },
   },
   {
     id: "bob2",
     person: "Bob",
-    color: C.gray,
+    color: C.muted,
     route: { x: 800, y: 340 },
     final: { x: BOX_CENTERS[1], y: TOP_NODE_Y },
   },
   {
     id: "carol1",
     person: "Carol",
-    color: C.gray,
+    color: C.muted,
     route: { x: 1280, y: 240 },
     final: { x: BOX_CENTERS[1], y: BOTTOM_NODE_Y },
   },
   {
     id: "carol2",
     person: "Carol",
-    color: C.gray,
+    color: C.muted,
     route: { x: 1160, y: 640 },
     final: { x: BOX_CENTERS[2], y: TOP_NODE_Y },
   },
   {
     id: "david1",
     person: "David",
-    color: C.gray,
+    color: C.muted,
     route: { x: 1560, y: 800 },
     final: { x: BOX_CENTERS[2], y: BOTTOM_NODE_Y },
   },
   {
     id: "david2",
     person: "David",
-    color: C.gray,
+    color: C.muted,
     route: { x: 1440, y: 360 },
     final: { x: BOX_CENTERS[3], y: TOP_NODE_Y },
   },
   {
     id: "ernest",
     person: "Ernest",
-    color: C.yellow,
+    color: C.amber,
     route: { x: 1680, y: 540 },
     final: { x: BOX_CENTERS[3], y: BOTTOM_NODE_Y },
   },
@@ -129,28 +136,28 @@ const EXTRAS: Inst[] = [
   {
     id: "frank",
     person: "Frank",
-    color: C.gray,
+    color: C.muted,
     route: { x: 760, y: 300 },
     final: { x: 760, y: 300 },
   },
   {
     id: "charlie",
     person: "Charlie",
-    color: C.gray,
+    color: C.muted,
     route: { x: 980, y: 840 },
     final: { x: 980, y: 840 },
   },
   {
     id: "derek",
     person: "Derek",
-    color: C.gray,
+    color: C.muted,
     route: { x: 1400, y: 320 },
     final: { x: 1400, y: 320 },
   },
   {
     id: "benjamin",
     person: "Benjamin",
-    color: C.gray,
+    color: C.muted,
     route: { x: 1120, y: 600 },
     final: { x: 1120, y: 600 },
   },
@@ -164,15 +171,15 @@ const EXTRA_IDS = new Set(EXTRAS.map((e) => e.id));
 const inst = (id: string): Inst => ALL.find((i) => i.id === id)!;
 
 const BOXES: BoxSpec[] = [
-  { id: "rootstock", name: "Rootstock", tag: null, color: C.green },
-  { id: "cashu", name: "Minibits Mint", tag: "Cashu", color: C.blue },
+  { id: "rootstock", name: "Rootstock", tag: null, color: C.rootstock },
+  { id: "cashu", name: "Minibits Mint", tag: "Cashu", color: C.cashu },
   {
     id: "fedimint",
     name: "Orange Club Africa",
     tag: "Fedimint",
-    color: C.orange,
+    color: C.fedimint,
   },
-  { id: "arkade", name: "Arkade", tag: null, color: C.purple },
+  { id: "arkade", name: "Arkade", tag: null, color: C.arkade },
 ];
 
 const T = {
@@ -206,43 +213,43 @@ const hopReceiverGlowFrom = (i: number) => hopArrowFrom(i) + 32;
 const GLOWS: GlowSpec[] = [
   {
     inst: "bob1",
-    color: C.green,
+    color: C.rootstock,
     from: hopReceiverGlowFrom(0),
     to: hopArrowFrom(1),
   },
   {
     inst: "bob2",
-    color: C.blue,
+    color: C.cashu,
     from: hopReceiverGlowFrom(0),
     to: hopArrowFrom(1),
   },
   {
     inst: "carol1",
-    color: C.blue,
+    color: C.cashu,
     from: hopReceiverGlowFrom(1),
     to: hopArrowFrom(2),
   },
   {
     inst: "carol2",
-    color: C.orange,
+    color: C.fedimint,
     from: hopReceiverGlowFrom(1),
     to: hopArrowFrom(2),
   },
   {
     inst: "david1",
-    color: C.orange,
+    color: C.fedimint,
     from: hopReceiverGlowFrom(2),
     to: hopArrowFrom(3),
   },
   {
     inst: "david2",
-    color: C.purple,
+    color: C.arkade,
     from: hopReceiverGlowFrom(2),
     to: hopArrowFrom(3),
   },
   {
     inst: "ernest",
-    color: C.yellow,
+    color: C.amber,
     from: hopReceiverGlowFrom(3),
     to: T.recvTo,
   },
@@ -393,15 +400,28 @@ const Box: React.FC<{
   return (
     <g opacity={opacity} style={{ pointerEvents: "none" }}>
       <rect
+        x={left + 8}
+        y={topY + 8}
+        width={BOX_W}
+        height={BOX_H}
+        fill={box.color}
+      />
+      <rect x={left} y={topY} width={BOX_W} height={BOX_H} fill={C.card} />
+      <rect
         x={left}
         y={topY}
         width={BOX_W}
         height={BOX_H}
-        rx={30}
         fill={`${box.color}0d`}
+      />
+      <rect
+        x={left}
+        y={topY}
+        width={BOX_W}
+        height={BOX_H}
+        fill="none"
         stroke={box.color}
         strokeWidth={3}
-        strokeOpacity={0.9}
       />
       <text
         x={cx}
@@ -434,14 +454,13 @@ const Box: React.FC<{
           y={HTLC_Y - HTLC_H / 2}
           width={HTLC_W}
           height={HTLC_H}
-          rx={16}
-          fill={reached ? `${box.color}22` : "#10141f"}
-          stroke={reached ? box.color : C.muted}
-          strokeWidth={2.5}
+          fill={reached ? "#34333f" : C.bg}
+          stroke={reached ? C.white : C.muted}
+          strokeWidth={3}
           style={{
             filter:
-              commitGlow > 0
-                ? `drop-shadow(0 0 ${30 * commitGlow}px ${box.color})`
+              reached && commitGlow > 0
+                ? `drop-shadow(${6 * commitGlow}px ${6 * commitGlow}px 0 ${C.white})`
                 : "none",
           }}
         />
@@ -451,7 +470,7 @@ const Box: React.FC<{
           textAnchor="middle"
           fontSize={17}
           fontWeight={700}
-          fill={reached ? box.color : C.muted}
+          fill={reached ? C.white : C.muted}
           fontFamily={MONO}
           letterSpacing={2}
         >
@@ -488,7 +507,7 @@ const Arrow: React.FC<{ arrow: ArrowSpec; frame: number }> = ({
   const ey = y1 + (y2 - y1) * p;
   const arrive = fade(frame, arrow.to - 4, 4);
 
-  const sh = 20;
+  const sh = 14;
   const tipX = x2 + s.ux * sh;
   const tipY = y2 + s.uy * sh;
   const half = sh * 0.5;
@@ -499,8 +518,8 @@ const Arrow: React.FC<{ arrow: ArrowSpec; frame: number }> = ({
 
   return (
     <g opacity={p} style={{ pointerEvents: "none" }}>
-      <line x1={x1} y1={y1} x2={ex} y2={ey} stroke={C.text} strokeWidth={8} />
-      <circle cx={ex} cy={ey} r={11} fill={C.text} opacity={1 - arrive} />
+      <line x1={x1} y1={y1} x2={ex} y2={ey} stroke={C.text} strokeWidth={3} />
+      <circle cx={ex} cy={ey} r={6} fill={C.text} opacity={1 - arrive} />
       <polygon
         points={`${tipX},${tipY} ${lx},${ly} ${rx},${ry}`}
         fill={C.text}
@@ -527,48 +546,37 @@ const NodeDot: React.FC<{ spec: Inst; frame: number }> = ({ spec, frame }) => {
   const g = glowFor(spec.id, frame);
   const p = pos(spec.id, frame);
   const op = opacity(spec.id, frame);
-  const halo = g ? `${g.color}${g.glowIn > 0.6 ? "cc" : "88"}` : "transparent";
-  const spread = g ? 70 * g.glowIn : 0;
+  const size = R * 2;
+  const punch = g ? g.glowIn : 0;
+  const shadowColor = g ? g.color : C.ink;
+  const shadowOff = g ? 4 + 8 * punch : 4;
 
   return (
     <AbsoluteFill
       style={{
         left: p.x - R,
         top: p.y - R,
-        width: R * 2,
-        height: R * 2,
+        width: size,
+        height: size,
         opacity: op,
       }}
     >
       <div
         style={{
           position: "absolute",
-          left: -16,
-          top: -16,
-          width: R * 2 + 32,
-          height: R * 2 + 32,
-          borderRadius: "50%",
-          background: halo,
-          boxShadow: g ? `0 0 ${spread + 12}px ${g.color}` : "none",
-          transform: `scale(${g ? 0.85 + g.glowIn * 0.3 : 1})`,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
           left: 0,
           top: 0,
-          width: R * 2,
-          height: R * 2,
-          borderRadius: "50%",
+          width: size,
+          height: size,
           background: spec.color,
-          border: `3px solid #ffffff44`,
+          border: `3px solid ${C.ink}`,
+          boxShadow: `${shadowOff}px ${shadowOff}px 0 ${shadowColor}`,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          color: "#0b0e14",
-          fontWeight: 800,
-          fontSize: 24,
+          color: C.bg,
+          fontWeight: 700,
+          fontSize: 30,
           fontFamily: MONO,
         }}
       >
@@ -578,8 +586,8 @@ const NodeDot: React.FC<{ spec: Inst; frame: number }> = ({ spec, frame }) => {
         style={{
           position: "absolute",
           left: -20,
-          top: R * 2 + 8,
-          width: R * 2 + 40,
+          top: size + 8,
+          width: size + 40,
           textAlign: "center",
           color: C.text,
           fontSize: 18,
@@ -610,15 +618,15 @@ const Bubble: React.FC<{ bubble: BubbleSpec; frame: number }> = ({
           position: "absolute",
           left: p.x - w / 2,
           top: p.y - R - 66,
-          background: "#1a2230",
+          background: C.card,
           border: `2px solid ${C.muted}`,
-          borderRadius: 14,
           padding: "10px 14px",
           color: C.text,
-          fontSize: 22,
+          fontSize: 20,
           fontWeight: 700,
           fontFamily: FONT,
           letterSpacing: 1,
+          textTransform: "uppercase",
           whiteSpace: "nowrap",
         }}
       >
@@ -631,7 +639,7 @@ const Bubble: React.FC<{ bubble: BubbleSpec; frame: number }> = ({
           top: p.y - R - 12,
           width: 16,
           height: 16,
-          background: "#1a2230",
+          background: C.card,
           borderRight: `2px solid ${C.muted}`,
           borderBottom: `2px solid ${C.muted}`,
           transform: "rotate(45deg)",
@@ -674,6 +682,15 @@ export const CassisVideo: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ background: C.bg }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage:
+            "linear-gradient(to right, rgba(247,247,245,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(247,247,245,0.06) 1px, transparent 1px)",
+          backgroundSize: "44px 44px",
+        }}
+      />
       <svg
         width="100%"
         height="100%"
