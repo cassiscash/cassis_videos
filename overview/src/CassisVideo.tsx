@@ -56,8 +56,6 @@ const C = {
 
 const R = 52;
 
-const ERNEST_INTRO: Pt = { x: 900, y: 540 };
-
 const BOX_CENTERS = [300, 740, 1180, 1620];
 const BOX_TOP = 160;
 const BOX_W = 380;
@@ -203,7 +201,7 @@ const T = {
 const HOP_IDS = ["alice", "bob2", "carol2", "david2"];
 
 const hopArrowFrom = (i: number) => T.hopStart + T.cycle * i;
-const hopReceiverGlowFrom = (i: number) => hopArrowFrom(i) + 20;
+const hopReceiverGlowFrom = (i: number) => hopArrowFrom(i) + 32;
 
 const GLOWS: GlowSpec[] = [
   {
@@ -317,13 +315,7 @@ const pos = (id: string, frame: number): Pt => {
   if (SPLIT_IDS.has(id)) return i.final;
 
   if (id === "ernest") {
-    const p = clamp(
-      interpolate(frame, [T.ernestMoveFrom, T.ernestMoveTo], [0, 1], {
-        extrapolateLeft: "clamp",
-        extrapolateRight: "clamp",
-      }),
-    );
-    if (frame < T.boxFrom) return lerp(ERNEST_INTRO, i.route, p);
+    if (frame < T.boxFrom) return i.route;
     const q = clamp(
       interpolate(frame, [T.boxFrom, T.boxTo], [0, 1], {
         extrapolateLeft: "clamp",
@@ -650,7 +642,7 @@ const Bubble: React.FC<{ bubble: BubbleSpec; frame: number }> = ({
 };
 
 export const CassisVideo: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useCurrentFrame() * 0.75;
   const boxOpacity = fade(frame, T.boxFrom, T.boxTo - T.boxFrom);
 
   const sendArrows: ArrowSpec[] = HOP_IDS.map((_, i) => {

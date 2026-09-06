@@ -6,7 +6,7 @@ export const MyComposition = () => {
     <Composition
       id="MyComp"
       component={CassisVideo}
-      durationInFrames={740}
+      durationInFrames={990}
       fps={30}
       width={1920}
       height={1080}
